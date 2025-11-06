@@ -11,82 +11,82 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 const ProtectedRoute = ({ children }) => {
-    const { isAuthenticated, user } = useAuthStore();
-    if (!isAuthenticated) {
-        return <Navigate to="/login" replace />;
-    }
+  const { isAuthenticated, user } = useAuthStore();
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
 
-    if (!user?.isVerified) {
-        return <Navigate to="/verify-email" replace />;
-    }
-    return children;
+  if (!user?.isVerified) {
+    return <Navigate to="/verify-email" replace />;
+  }
+  return children;
 };
 const RedirectAuthenticatedUser = ({ children }) => {
-    const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
 
-    if (isAuthenticated && user.isVerified) {
-        return <Navigate to="/" replace />;
-    }
+  if (isAuthenticated && user?.isVerified) {
+    return <Navigate to="/" replace />;
+  }
 
-    return children;
+  return children;
 };
 
 export default function App() {
-    const { checkAuth, isCheckingAuth } = useAuthStore();
-    useEffect(() => {
-        checkAuth();
-    }, [checkAuth]);
+  const { checkAuth, isCheckingAuth } = useAuthStore();
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
-    if (!isCheckingAuth) {
-        <LoadingSpinner />;
-    }
+  if (!isCheckingAuth) {
+    <LoadingSpinner />;
+  }
 
-    return (
-        <div className="min-h-screen bg-gradient-to-br from-zinc-800 to-green-500 flex items-center relative overflow-hidden justify-center ">
-            <Routes>
-                <Route
-                    path="/"
-                    element={
-                        <ProtectedRoute>
-                            <Home />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/signup"
-                    element={
-                        <RedirectAuthenticatedUser>
-                            <SignUpPage />
-                        </RedirectAuthenticatedUser>
-                    }
-                />
-                <Route
-                    path="/login"
-                    element={
-                        <RedirectAuthenticatedUser>
-                            <LoginPage />
-                        </RedirectAuthenticatedUser>
-                    }
-                />
-                <Route path="/verify-email" element={<VerifyEmailPage />} />
-                <Route
-                    path="/forgot-password"
-                    element={
-                        <RedirectAuthenticatedUser>
-                            <ForgotPasswordPage />
-                        </RedirectAuthenticatedUser>
-                    }
-                />
-                <Route
-                    path="/reset-password/:token"
-                    element={
-                        <RedirectAuthenticatedUser>
-                            <ResetPasswordPage />
-                        </RedirectAuthenticatedUser>
-                    }
-                />
-            </Routes>
-            <Toaster />
-        </div>
-    );
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-zinc-800 to-green-500 flex items-center relative overflow-hidden justify-center ">
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <RedirectAuthenticatedUser>
+              <SignUpPage />
+            </RedirectAuthenticatedUser>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <RedirectAuthenticatedUser>
+              <LoginPage />
+            </RedirectAuthenticatedUser>
+          }
+        />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
+        <Route
+          path="/forgot-password"
+          element={
+            <RedirectAuthenticatedUser>
+              <ForgotPasswordPage />
+            </RedirectAuthenticatedUser>
+          }
+        />
+        <Route
+          path="/reset-password/:token"
+          element={
+            <RedirectAuthenticatedUser>
+              <ResetPasswordPage />
+            </RedirectAuthenticatedUser>
+          }
+        />
+      </Routes>
+      <Toaster />
+    </div>
+  );
 }
